@@ -15,7 +15,7 @@ class Calendar(Popup):
     month = NumericProperty(6)
     year = NumericProperty(2010)
     root = BoxLayout(orientation = "vertical")
-# asd
+
     def __init__(self, **kwargs):
         super(Popup, self).__init__(**kwargs)
         self.add_widget(self.root)
