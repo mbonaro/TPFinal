@@ -94,7 +94,7 @@ class Calendar(Popup):
                 else:
                     dateOfWeek = self.dy[wk][d]
                     if not dateOfWeek == 0:
-                        b = Button(text = str(dateOfWeek))
+                        b = Button(text = str(dateOfWeek), background_color=(1.0, 0.0, 0.0, 1.0))
                     else:
                         b = Label(text = '' )
                     layout.add_widget(b)
