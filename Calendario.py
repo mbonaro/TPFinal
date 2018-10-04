@@ -10,11 +10,15 @@ from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 from kivy.properties import NumericProperty
 from kivy.uix.gridlayout import GridLayout
+from kivy.uix.dropdown import DropDown
+from kivy.uix.button import Button
+from kivy.base import runTouchApp
 import calendar
 import time
 
 class Turnos(Popup):
     turnoRoot = BoxLayout(orientation = "vertical")
+    #turnoRoot = GridLayout(cols=2,rows=4)
 
     def __init__(self, **kwargs):
         super(Popup, self).__init__(**kwargs)
@@ -22,11 +26,35 @@ class Turnos(Popup):
         self.create_turno()
 
     def create_turno(self):
-        layout = GridLayout(cols=7)
+        titulo = GridLayout(cols=1, row_force_default=True, row_default_height=40, padding = 10)
         if self.turnoRoot:
             self.turnoRoot.clear_widgets()
-        b = Button(text = "turno")
-        self.turnoRoot.add_widget(b)
+        tit = Label(text = "Deslize para seleccionar el horario en que desea el turno")
+        titulo.add_widget(tit)
+        self.turnoRoot.add_widget(titulo)
+
+        #Creacion del dropbox
+        dropdown = DropDown(width=475, auto_dismiss=False, dismiss_on_select=False, height = 240)
+        for index in range(10):
+            btn = Button(text='Value %d' % index, size_hint_y=None, height=44)
+            #btn.bind(on_release=lambda btn: dropdown.select(btn.text))
+            btn.bind(on_release= self.mostrar)
+            dropdown.add_widget(btn)
+        #mainbutton = Button(text='Hello', size_hint=(None, None))
+        #mainbutton.bind(on_release=dropdown.open)
+        #dropdown.bind(on_select=lambda instance, x: setattr(mainbutton, 'text', x))
+        self.turnoRoot.add_widget(dropdown)
+
+        botones = GridLayout(cols=2, row_force_default=True, row_default_height=40, padding = 10)
+        acept = Button(text = "Aceptar")
+        canc = Button(text = "Cancelar")
+        botones.add_widget(acept)
+        botones.add_widget(canc)
+        self.turnoRoot.add_widget(botones)
+
+    def mostrar(self,event):
+        print("hola")
+        print(event.text)
 
 
 class Calendar(Popup):
@@ -123,3 +151,4 @@ class MyCalendar(App):
 
 if __name__ == "__main__":
     MyCalendar().run()
+
