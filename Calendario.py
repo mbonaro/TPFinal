@@ -25,7 +25,7 @@ class Turnos(Popup):
         layout = GridLayout(cols=7)
         if self.turnoRoot:
             self.turnoRoot.clear_widgets()
-        b = Button(text = "puto")
+        b = Button(text = "turno")
         self.turnoRoot.add_widget(b)
 
 
