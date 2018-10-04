@@ -82,14 +82,22 @@ class Calendar(Popup):
             layout.add_widget(b)
          
         for wk in range(len(self.dy)):
-            for d in range(0,7):    
-                dateOfWeek = self.dy[wk][d]
-                if not dateOfWeek == 0:
-                    b = Button(text = str(dateOfWeek))
-                    b.bind(on_release = self.date_selected)
+            for d in range(0,7):
+                if not (d==6 or d==5):
+                    dateOfWeek = self.dy[wk][d]
+                    if not dateOfWeek == 0:
+                        b = Button(text = str(dateOfWeek))
+                        b.bind(on_release = self.date_selected)
+                    else:
+                        b = Label(text = '' )
+                    layout.add_widget(b)
                 else:
-                    b = Label(text = '' )
-                layout.add_widget(b)
+                    dateOfWeek = self.dy[wk][d]
+                    if not dateOfWeek == 0:
+                        b = Button(text = str(dateOfWeek))
+                    else:
+                        b = Label(text = '' )
+                    layout.add_widget(b)
         if self.root:
             self.root.clear_widgets()
         self.root.add_widget(layout)
@@ -114,7 +122,8 @@ class Calendar(Popup):
         
     def date_selected(self, event):
         self.day = int(event.text)
-        self.dismiss()
+        print(self.day)
+        #self.dismiss()
 
     def on_month(self, widget, event):
         self.create_calendar()
@@ -151,4 +160,3 @@ class MyCalendar(App):
 
 if __name__ == "__main__":
     MyCalendar().run()
-
