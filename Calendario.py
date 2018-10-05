@@ -24,8 +24,10 @@ class Turnos(Popup):
     # turnoRoot = GridLayout(cols=2,rows=4)
 
     def __init__(self,fec, **kwargs):
+        turnoRoot = BoxLayout(orientation="vertical")
         super(Popup, self).__init__(**kwargs)
-        self.add_widget(self.turnoRoot)
+        self.add_widget(turnoRoot)
+        self.turnoRoot = turnoRoot
         self.datos=Datos()
         self.fecha=fec
         self.create_turno()
@@ -38,21 +40,20 @@ class Turnos(Popup):
         titulo.add_widget(tit)
         self.turnoRoot.add_widget(titulo)
 
+        #Verificar horarios disponibles
+
         # Creacion del dropbox
         dropdown = DropDown(width=475, auto_dismiss=False, dismiss_on_select=False, height=240)
         for index in range(10, 19):
             btn = Button(text='%d:00' % index, size_hint_y=None, height=44)
-            # btn.bind(on_release=lambda btn: dropdown.select(btn.text))
             btn.bind(on_release=self.mostrar)
             dropdown.add_widget(btn)
-        # mainbutton = Button(text='Hello', size_hint=(None, None))
-        # mainbutton.bind(on_release=dropdown.open)
-        # dropdown.bind(on_select=lambda instance, x: setattr(mainbutton, 'text', x))
         self.turnoRoot.add_widget(dropdown)
 
         botones = GridLayout(cols=2, row_force_default=True, row_default_height=40, padding=10)
         acept = Button(text="Aceptar")
         canc = Button(text="Cancelar")
+        canc.bind(on_release=self.cerrar)
         botones.add_widget(acept)
         botones.add_widget(canc)
         self.turnoRoot.add_widget(botones)
@@ -62,6 +63,9 @@ class Turnos(Popup):
         self.datos.alta(Turno(fecha=self.fecha, hora=self.hora))
         print(time.strftime('%H:%M', self.hora))
         print(datetime.datetime.strftime(self.fecha,'%Y-%m-%d'))
+
+    def cerrar(self, event):
+        self.dismiss()
 
 
 
