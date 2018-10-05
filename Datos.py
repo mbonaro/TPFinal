@@ -4,18 +4,11 @@ from sqlalchemy.orm import sessionmaker
 
 Base = declarative_base()
 
-class Dia(Base):
-    __tablename__ = 'diaturnos'
+class Turnos(Base):
+    __tablename__ = 'turnos'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    fecha = Column(DATE, nullable=False, unique=True)
-    horaInicio = Column(TIME)
-    horaFin = Column(Time)
-
-class Hora(Base):
-    __tablename__ = 'horasdia'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    fecha = Column(DATE, primary_key=True, nullable=False)
-    hora = Column(TIME, unique=True)
+    fecha = Column(DATE, nullable=False)
+    hora = Column(TIME, nullable=False)
 
 class Datos(object):
 
@@ -31,11 +24,8 @@ class Datos(object):
         self.session.commit()
         return entrada
 
-    def buscarHoras(self, fecha):
-        fech = self.session.query(Hora).filter(Hora.fecha == fecha).all()
+    def buscarTurnosFecha(self, fecha):
+        fech = self.session.query(Turnos).filter(Turnos.fecha == fecha).all()
         return fech
 
 datos = Datos()
-fechas = datos.buscarHoras('2018-10-07')
-for i in fechas:
-    print(i.hora)
