@@ -15,16 +15,19 @@ from kivy.uix.button import Button
 from kivy.base import runTouchApp
 import calendar
 import time
-
+from Datos import Turno, Datos
+import datetime
+import time
 
 class Turnos(Popup):
     turnoRoot = BoxLayout(orientation="vertical")
-
     # turnoRoot = GridLayout(cols=2,rows=4)
 
-    def __init__(self, **kwargs):
+    def __init__(self,fec, **kwargs):
         super(Popup, self).__init__(**kwargs)
         self.add_widget(self.turnoRoot)
+        self.datos=Datos()
+        self.fecha=fec
         self.create_turno()
 
     def create_turno(self):
@@ -37,7 +40,7 @@ class Turnos(Popup):
 
         # Creacion del dropbox
         dropdown = DropDown(width=475, auto_dismiss=False, dismiss_on_select=False, height=240)
-        for index in range(9, 19):
+        for index in range(10, 19):
             btn = Button(text='%d:00' % index, size_hint_y=None, height=44)
             # btn.bind(on_release=lambda btn: dropdown.select(btn.text))
             btn.bind(on_release=self.mostrar)
@@ -55,8 +58,12 @@ class Turnos(Popup):
         self.turnoRoot.add_widget(botones)
 
     def mostrar(self, event):
-        print("hola")
-        print(event.text)
+        self.hora = time.strptime(event.text, '%H:%M')
+        self.datos.alta(Turno(fecha=self.fecha, hora=self.hora))
+        print(time.strftime('%H:%M', self.hora))
+        print(datetime.datetime.strftime(self.fecha,'%Y-%m-%d'))
+
+
 
 
 class Calendar(Popup):
@@ -155,7 +162,8 @@ class MyCalendar(App):
 
     def mostrarTurno(self):
         titulo = 'Turno para el ' + str(self.popup.day) + '/' + str(self.popup.month) + '/' + str(self.popup.year)
-        self.turnosPop = Turnos(title=str(titulo), size_hint=(None, None), size=(500, 400))
+        fec = datetime.datetime.strptime((str(self.popup.year) + '-' + str(self.popup.month) + '-' + str(self.popup.day)), '%Y-%m-%d')
+        self.turnosPop = Turnos(fec ,title=str(titulo), size_hint=(None, None), size=(500, 400))
         print("Date selected: ", str(self.popup.day) + '/' + str(self.popup.month) + '/' + str(self.popup.year))
         self.turnosPop.open()
 

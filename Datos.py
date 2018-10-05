@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 
 Base = declarative_base()
 
-class Turnos(Base):
+class Turno(Base):
     __tablename__ = 'turnos'
     id = Column(Integer, primary_key=True, autoincrement=True)
     fecha = Column(DATE, nullable=False)
