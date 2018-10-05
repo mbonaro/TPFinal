@@ -31,11 +31,11 @@ class Datos(object):
         self.session.commit()
         return entrada
 
-    def buscarHora(self, fecha):
+    def buscarHoras(self, fecha):
         fech = self.session.query(Hora).filter(Hora.fecha == fecha).all()
         return fech
 
 datos = Datos()
-fechas = datos.buscarHora('2018-10-07')
+fechas = datos.buscarHoras('2018-10-07')
 for i in fechas:
     print(i.hora)
