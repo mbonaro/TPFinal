@@ -1,3 +1,11 @@
+"""md
+diagrama de clases
+caso de uso principal
+test de altas
+archivo de test
+archivo de herramientas usadas
+"""
+
 import kivy
 from kivy.app import App
 from kivy.uix.button import Button
@@ -22,13 +30,17 @@ import time
 class Confirmacion(Popup):
     confirmacion = BoxLayout(orientation="vertical")
 
-    def __init__(self, **kwargs):
+    def __init__(self,turno, fecha, hora, **kwargs):
         confirmacion = BoxLayout(orientation="vertical")
         super(Popup, self).__init__(**kwargs)
+        self.fecha=fecha
+        self.datos=Datos()
+        self.hora=hora
         self.add_widget(confirmacion)
         self.confirmacion = confirmacion
         self.turnoRoot = confirmacion
         self.confirmar()
+        self.turno=turno
 
     def confirmar(self):
         grilla = GridLayout(cols= 2, row_default_height=40, padding=10)
@@ -38,9 +50,16 @@ class Confirmacion(Popup):
         grilla.add_widget(canc)
         self.confirmacion.add_widget(grilla)
         canc.bind(on_release=self.cerrar)
+        acept.bind(on_release=self.agregar)
 
     def cerrar(self, event):
         self.dismiss()
+
+    def agregar(self, event):
+        self.datos.alta(Turno(fecha=self.fecha, hora=self.hora))
+        self.dismiss()
+        self.turno.dismiss()
+
 
 
 class Turnos(Popup):
@@ -52,7 +71,6 @@ class Turnos(Popup):
         super(Popup, self).__init__(**kwargs)
         self.add_widget(turnoRoot)
         self.turnoRoot = turnoRoot
-        self.datos=Datos()
         self.fecha=fec
         self.create_turno()
 
@@ -93,8 +111,10 @@ class Turnos(Popup):
         fec = datetime.datetime.strftime(self.fecha,'%Y-%m-%d')
         #titulo = 'Confirmar Turno'# ' + str(dia) + '/' + str(self.month) + '/' + str(self.year)
         titulo = 'Confirmar Turno para el dia ' + fec + ' a las ' + hor
-        self.confirmacion = Confirmacion(title=str(titulo), size_hint=(None, None), size=(400, 200))
+        self.confirmacion = Confirmacion(self,self.fecha, self.hora, title=str(titulo), size_hint=(None, None), size=(400, 200))
         self.confirmacion.open()
+
+        #self.dismiss()
 
     def cerrar(self, event):
         self.dismiss()

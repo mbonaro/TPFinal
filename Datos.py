@@ -1,14 +1,13 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import *
 from sqlalchemy.orm import sessionmaker
-
+import datetime
 Base = declarative_base()
 
 class Turno(Base):
     __tablename__ = 'turnos'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    fecha = Column(DATE, nullable=False)
-    hora = Column(TIME, nullable=False)
+    fecha = Column(DATE, primary_key=True, nullable=False)
+    hora = Column(TIME, primary_key=True, nullable=False)
 
 class Datos(object):
 
@@ -30,7 +29,8 @@ class Datos(object):
         return True
 
     def buscarTurnosFecha(self, fecha):
-        fech = self.session.query(Turno).filter(Turno.fecha == fecha).all()
+        fech = self.session.query(Turno.hora).filter(Turno.fecha == fecha).all()
         return fech
 
 datos = Datos()
+
