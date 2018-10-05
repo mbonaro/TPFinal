@@ -25,7 +25,7 @@ class Datos(object):
         return entrada
 
     def buscarTurnosFecha(self, fecha):
-        fech = self.session.query(Turnos).filter(Turnos.fecha == fecha).all()
+        fech = self.session.query(Turno).filter(Turno.fecha == fecha).all()
         return fech
 
 datos = Datos()
