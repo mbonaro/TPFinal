@@ -30,7 +30,11 @@ class Datos(object):
 
     def buscarTurnosFecha(self, fecha):
         fech = self.session.query(Turno.hora).filter(Turno.fecha == fecha).all()
-        return fech
+        h=[]
+        for i in fech:
+            h.append(datetime.time.strftime(i.hora, '%H'))
+        return h
 
 datos = Datos()
+datos.buscarTurnosFecha('2018-10-18')
 

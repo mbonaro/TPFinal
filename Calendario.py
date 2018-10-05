@@ -68,6 +68,7 @@ class Turnos(Popup):
 
     def __init__(self, fec, **kwargs):
         turnoRoot = BoxLayout(orientation="vertical")
+        self.datos=Datos()
         super(Popup, self).__init__(**kwargs)
         self.add_widget(turnoRoot)
         self.turnoRoot = turnoRoot
@@ -86,10 +87,13 @@ class Turnos(Popup):
 
         # Creacion del dropbox
         dropdown = DropDown(width=475, auto_dismiss=False, dismiss_on_select=False, height=240)
+        h=self.datos.buscarTurnosFecha(self.fecha)
+        print(h)
         for index in range(10, 19):
-            btn = Button(text='%d:00' % index, size_hint_y=None, height=44)
-            btn.bind(on_press=self.elegir)
-            dropdown.add_widget(btn)
+            if (str(index) not in h):
+                btn = Button(text='%d:00' % index, size_hint_y=None, height=44)
+                btn.bind(on_press=self.elegir)
+                dropdown.add_widget(btn)
         self.turnoRoot.add_widget(dropdown)
 
         botones = GridLayout(cols=2, row_force_default=True, row_default_height=40, padding=10)
@@ -213,7 +217,7 @@ class MyCalendar(App):
         self.popup = Calendar(month=int(mes), year=int(año),
                               size_hint=(None, None), size=(500, 400))
         self.popup.bind(on_dismiss=self.on_dismiss)
-        return Button(text="Show calendar", on_release=self.show_calendar)
+        return Button(text="Calendario", on_release=self.show_calendar)
 
     def show_calendar(self, event):
         self.popup.open()
