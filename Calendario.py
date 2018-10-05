@@ -123,7 +123,7 @@ class Calendar(Popup):
     def date_selected(self, event):
         self.day = int(event.text)
         print(self.day)
-        #self.dismiss()
+        self.dismiss()
 
     def on_month(self, widget, event):
         self.create_calendar()
