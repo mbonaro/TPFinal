@@ -19,6 +19,25 @@ from Datos import Turno, Datos
 import datetime
 import time
 
+class Confirmacion(Popup):
+    confirmacion = BoxLayout(orientation="vertical")
+
+    def __init__(self, **kwargs):
+        confirmacion = BoxLayout(orientation="vertical")
+        super(Popup, self).__init__(**kwargs)
+        self.add_widget(confirmacion)
+        self.confirmacion = confirmacion
+        self.turnoRoot = confirmacion
+        self.confirmar()
+
+    def confirmar(self):
+        grilla = GridLayout(cols= 2, row_default_height=40, padding=10)
+        acept = Button(text="Aceptar")
+        canc = Button(text="Cancelar")
+        grilla.add_widget(acept)
+        grilla.add_widget(canc)
+        self.confirmacion.add_widget(grilla)
+
 class Turnos(Popup):
     turnoRoot = BoxLayout(orientation="vertical")
     # turnoRoot = GridLayout(cols=2,rows=4)
@@ -46,7 +65,7 @@ class Turnos(Popup):
         dropdown = DropDown(width=475, auto_dismiss=False, dismiss_on_select=False, height=240)
         for index in range(10, 19):
             btn = Button(text='%d:00' % index, size_hint_y=None, height=44)
-            btn.bind(on_release=self.mostrar)
+            btn.bind(on_press=self.elegir)
             dropdown.add_widget(btn)
         self.turnoRoot.add_widget(dropdown)
 
@@ -58,11 +77,19 @@ class Turnos(Popup):
         botones.add_widget(canc)
         self.turnoRoot.add_widget(botones)
 
-    def mostrar(self, event):
-        self.hora = time.strptime(event.text, '%H:%M')
-        self.datos.alta(Turno(fecha=self.fecha, hora=self.hora))
+
+
+    def elegir(self, btn):
+        self.hora = time.strptime(btn.text, '%H:%M')
+        #self.datos.alta(Turno(fecha=self.fecha, hora=self.hora))
         print(time.strftime('%H:%M', self.hora))
         print(datetime.datetime.strftime(self.fecha,'%Y-%m-%d'))
+        hor = time.strftime('%H:%M', self.hora)
+        fec = datetime.datetime.strftime(self.fecha,'%Y-%m-%d')
+        #titulo = 'Confirmar Turno'# ' + str(dia) + '/' + str(self.month) + '/' + str(self.year)
+        titulo = 'Confirmar Turno para el dia ' + fec + ' a las ' + hor
+        self.confirmacion = Confirmacion(title=str(titulo), size_hint=(None, None), size=(400, 200))
+        self.confirmacion.open()
 
     def cerrar(self, event):
         self.dismiss()
