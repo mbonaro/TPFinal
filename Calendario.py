@@ -23,7 +23,7 @@ class Turnos(Popup):
     turnoRoot = BoxLayout(orientation="vertical")
     # turnoRoot = GridLayout(cols=2,rows=4)
 
-    def __init__(self,fec, **kwargs):
+    def __init__(self, fec, **kwargs):
         turnoRoot = BoxLayout(orientation="vertical")
         super(Popup, self).__init__(**kwargs)
         self.add_widget(turnoRoot)
@@ -101,7 +101,7 @@ class Calendar(Popup):
                     dateOfWeek = self.dy[wk][d]
                     if not dateOfWeek == 0:
                         b = Button(text=str(dateOfWeek))
-                        b.bind(on_release=self.date_selected)
+                        b.bind(on_release=self.mostrarTurno)
                     else:
                         b = Label(text='')
                     layout.add_widget(b)
@@ -145,6 +145,13 @@ class Calendar(Popup):
     def on_year(self, widget, event):
         self.create_calendar()
 
+    def mostrarTurno(self, event):
+        dia = int(event.text)
+        titulo = 'Turno para el ' + str(dia) + '/' + str(self.month) + '/' + str(self.year)
+        fec = datetime.datetime.strptime((str(self.year) + '-' + str(self.month) + '-' + str(dia)), '%Y-%m-%d')
+        self.turnosPop = Turnos(fec, title=str(titulo), size_hint=(None, None), size=(500, 400))
+        self.turnosPop.open()
+
 
 class MyCalendar(App):
     def build(self):
@@ -161,16 +168,16 @@ class MyCalendar(App):
 
     def on_dismiss(self, arg):
         # Do something on close of popup
-        self.mostrarTurno()
+        #self.mostrarTurno()
         print("Date selected: ", str(self.popup.day) + '/' + str(self.popup.month) + '/' + str(self.popup.year))
-
+'''
     def mostrarTurno(self):
         titulo = 'Turno para el ' + str(self.popup.day) + '/' + str(self.popup.month) + '/' + str(self.popup.year)
         fec = datetime.datetime.strptime((str(self.popup.year) + '-' + str(self.popup.month) + '-' + str(self.popup.day)), '%Y-%m-%d')
         self.turnosPop = Turnos(fec ,title=str(titulo), size_hint=(None, None), size=(500, 400))
         print("Date selected: ", str(self.popup.day) + '/' + str(self.popup.month) + '/' + str(self.popup.year))
         self.turnosPop.open()
-
+'''
 
 if __name__ == "__main__":
     MyCalendar().run()
