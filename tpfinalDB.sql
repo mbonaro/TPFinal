@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `soportetpfinal` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */;
 USE `soportetpfinal`;
--- MySQL dump 10.13  Distrib 8.0.11, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.12, for Win64 (x86_64)
 --
 -- Host: localhost    Database: soportetpfinal
 -- ------------------------------------------------------
--- Server version	8.0.11
+-- Server version	8.0.12
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -25,10 +25,9 @@ DROP TABLE IF EXISTS `turnos`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `turnos` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
   `fecha` date NOT NULL,
   `hora` time NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`fecha`,`hora`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -38,6 +37,7 @@ CREATE TABLE `turnos` (
 
 LOCK TABLES `turnos` WRITE;
 /*!40000 ALTER TABLE `turnos` DISABLE KEYS */;
+INSERT INTO `turnos` VALUES ('2018-10-17','12:00:00'),('2018-10-17','14:00:00'),('2018-10-18','10:00:00'),('2018-10-18','11:00:00'),('2018-10-18','12:00:00'),('2018-10-18','13:00:00'),('2018-10-18','14:00:00'),('2018-10-18','15:00:00'),('2018-10-18','16:00:00'),('2018-10-18','17:00:00'),('2018-10-18','18:00:00'),('2018-11-23','13:00:00');
 /*!40000 ALTER TABLE `turnos` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -50,4 +50,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-10-04 22:13:29
+-- Dump completed on 2018-10-05 16:18:37
