@@ -37,6 +37,11 @@ class Confirmacion(Popup):
         grilla.add_widget(acept)
         grilla.add_widget(canc)
         self.confirmacion.add_widget(grilla)
+        canc.bind(on_release=self.cerrar)
+
+    def cerrar(self, event):
+        self.dismiss()
+
 
 class Turnos(Popup):
     turnoRoot = BoxLayout(orientation="vertical")
@@ -70,10 +75,10 @@ class Turnos(Popup):
         self.turnoRoot.add_widget(dropdown)
 
         botones = GridLayout(cols=2, row_force_default=True, row_default_height=40, padding=10)
-        acept = Button(text="Aceptar")
+        #acept = Button(text="Aceptar")
         canc = Button(text="Cancelar")
         canc.bind(on_release=self.cerrar)
-        botones.add_widget(acept)
+        #botones.add_widget(acept)
         botones.add_widget(canc)
         self.turnoRoot.add_widget(botones)
 
