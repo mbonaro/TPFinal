@@ -24,6 +24,11 @@ class Datos(object):
         self.session.commit()
         return entrada
 
+    def baja(self,fecha, hora):
+        self.session.query(Turno).filter(Turno.fecha == fecha and Turno.hora == hora).delete()
+        self.session.commit()
+        return True
+
     def buscarTurnosFecha(self, fecha):
         fech = self.session.query(Turno).filter(Turno.fecha == fecha).all()
         return fech
