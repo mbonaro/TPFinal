@@ -20,12 +20,131 @@ from kivy.properties import NumericProperty
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.dropdown import DropDown
 from kivy.uix.button import Button
+from kivy.uix.textinput import TextInput
 from kivy.base import runTouchApp
 import calendar
+
 import time
-from Datos import Turno, Datos
+from Datos import Usuario,Turno, Datos
 import datetime
 import time
+
+global USER
+
+class Error(Popup):
+    error = BoxLayout(orientation="vertical")
+    def __init__(self,msj, **kwargs):
+        error = BoxLayout(orientation="vertical")
+        super(Popup, self).__init__(**kwargs)
+        self.add_widget(error)
+        self.error = error
+        self.construir(msj)
+
+    def construir(self, msj):
+        mensaje = Label(text = msj)
+        btn = Button(text = "Aceptar")
+        btn.bind(on_release=self.cerrar)
+        self.error.add_widget(mensaje)
+        self.error.add_widget(btn)
+    def cerrar(self,ev):
+        self.dismiss()
+
+class Registro(Popup):
+    registro = BoxLayout(orientation="vertical")
+
+    def __init__(self, **kwargs):
+        registro = BoxLayout(orientation="vertical")
+        super(Popup, self).__init__(**kwargs)
+        self.add_widget(registro)
+        self.registro = registro
+        self.construir()
+        self.datos = Datos()
+
+    def construir(self):
+        nom = Label(text="Nombre y apeliido")
+        nominput = TextInput()
+        us = Label(text="Nombre de usuario")
+        usinput = TextInput()
+        psw = Label(text="Contraseña")
+        pswinput = TextInput(password=True)
+        botones = GridLayout(cols=3, row_default_height=40, padding=10)
+        aceptar = Button(text="Aceptar")
+        aceptar.bind(on_release = lambda x : self.alta(nominput.text,usinput.text,pswinput.text))
+        cancelar = Button(text="Cancelar")
+        cancelar.bind(on_release=self.cerrar)
+        botones.add_widget(aceptar)
+        botones.add_widget(cancelar)
+        self.registro.add_widget(nom)
+        self.registro.add_widget(nominput)
+        self.registro.add_widget(us)
+        self.registro.add_widget(usinput)
+        self.registro.add_widget(psw)
+        self.registro.add_widget(pswinput)
+        self.registro.add_widget(botones)
+
+    def cerrar(self,ev):
+        self.dismiss()
+    def alta(self,nom,us,psw):
+        try:
+            self.datos.alta(Usuario(nombre=nom, usuario=us, contraseña=psw))
+            self.dismiss()
+        except Exception:
+            er = Error("El usuario ya esxiste",title="Error al crear usuario", size_hint=(None, None), size=(400, 100))
+            er.open()
+
+
+
+class Ingreso(Popup):
+    ingresar = BoxLayout(orientation="vertical")
+
+
+    def __init__(self,principal, **kwargs):
+        ingresar = BoxLayout(orientation="vertical")
+        super(Popup, self).__init__(**kwargs)
+        self.add_widget(ingresar)
+        self.ingresar = ingresar
+        self.construir()
+        self.principal = principal
+        self.datos = Datos()
+
+    def construir(self):
+        nom = Label(text="Nombre de usuario")
+        nominput = TextInput()
+        psw = Label(text="Contraseña")
+        pswinput = TextInput(password=True )
+        botones = GridLayout(cols= 3, row_default_height=40, padding=10)
+        aceptar = Button(text = "Aceptar")
+        aceptar.bind(on_release = lambda x : self.verificarusuario(nominput.text,pswinput.text))
+        cancelar = Button(text="Cancelar")
+        cancelar.bind(on_release=self.cerrar)
+        registrarse = Button(text="Registrarse")
+        registrarse.bind(on_release = self.registro)
+        botones.add_widget(aceptar)
+        botones.add_widget(cancelar)
+        botones.add_widget(registrarse)
+        self.ingresar.add_widget(nom)
+        self.ingresar.add_widget(nominput)
+        self.ingresar.add_widget(psw)
+        self.ingresar.add_widget(pswinput)
+        self.ingresar.add_widget(botones)
+
+    def cerrar(self,ev):
+        self.principal.stop()
+
+    def verificarusuario(self, nom, psw):
+        x = self.datos.verificarUsuario(nom,psw)
+        if not(x == 0):
+            global us
+            us = str(x[0].usuario)
+            self.principal.show_calendar(self)
+        else:
+            er = Error("Usuario y/o contraseña incorrecta", title="Error", size_hint=(None, None), size=(400, 100))
+            er.open()
+
+    def registro(self,ev):
+        registroPop = Registro(title=str("Registro de usuario"), size_hint=(None, None), size=(600, 400))
+        registroPop.open()
+
 
 class Confirmacion(Popup):
     confirmacion = BoxLayout(orientation="vertical")
@@ -56,7 +175,7 @@ class Confirmacion(Popup):
         self.dismiss()
 
     def agregar(self, event):
-        self.datos.alta(Turno(fecha=self.fecha, hora=self.hora))
+        self.datos.alta(Turno(fecha=self.fecha, hora=self.hora, usuario=us))
         self.dismiss()
         self.turno.dismiss()
 
@@ -88,7 +207,6 @@ class Turnos(Popup):
         # Creacion del dropbox
         dropdown = DropDown(width=475, auto_dismiss=False, dismiss_on_select=False, height=240)
         h=self.datos.buscarTurnosFecha(self.fecha)
-        print(h)
         for index in range(10, 19):
             if (str(index) not in h):
                 btn = Button(text='%d:00' % index, size_hint_y=None, height=44)
@@ -109,8 +227,6 @@ class Turnos(Popup):
     def elegir(self, btn):
         self.hora = time.strptime(btn.text, '%H:%M')
         #self.datos.alta(Turno(fecha=self.fecha, hora=self.hora))
-        print(time.strftime('%H:%M', self.hora))
-        print(datetime.datetime.strftime(self.fecha,'%Y-%m-%d'))
         hor = time.strftime('%H:%M', self.hora)
         fec = datetime.datetime.strftime(self.fecha,'%Y-%m-%d')
         #titulo = 'Confirmar Turno'# ' + str(dia) + '/' + str(self.month) + '/' + str(self.year)
@@ -192,7 +308,6 @@ class Calendar(Popup):
 
     def date_selected(self, event):
         self.day = int(event.text)
-        print(self.day)
         self.dismiss()
 
     def on_month(self, widget, event):
@@ -214,26 +329,14 @@ class MyCalendar(App):
         """Inicializa en el mes actual y año actual"""
         mes = time.strftime('%m')
         año = time.strftime('%Y')
-        self.popup = Calendar(month=int(mes), year=int(año),
-                              size_hint=(None, None), size=(500, 400))
-        self.popup.bind(on_dismiss=self.on_dismiss)
-        return Button(text="Calendario", on_release=self.show_calendar)
+        self.popup = Calendar(month=int(mes), year=int(año), size=(500, 400))
+        #self.popup.bind(on_dismiss=self.on_dismiss)
+        self.ingreso = Ingreso(self,title = ("Login"), size=(500, 400))
+        return self.ingreso
 
     def show_calendar(self, event):
         self.popup.open()
 
-    def on_dismiss(self, arg):
-        # Do something on close of popup
-        #self.mostrarTurno()
-        print("Date selected: ", str(self.popup.day) + '/' + str(self.popup.month) + '/' + str(self.popup.year))
-'''
-    def mostrarTurno(self):
-        titulo = 'Turno para el ' + str(self.popup.day) + '/' + str(self.popup.month) + '/' + str(self.popup.year)
-        fec = datetime.datetime.strptime((str(self.popup.year) + '-' + str(self.popup.month) + '-' + str(self.popup.day)), '%Y-%m-%d')
-        self.turnosPop = Turnos(fec ,title=str(titulo), size_hint=(None, None), size=(500, 400))
-        print("Date selected: ", str(self.popup.day) + '/' + str(self.popup.month) + '/' + str(self.popup.year))
-        self.turnosPop.open()
-'''
 
 if __name__ == "__main__":
     MyCalendar().run()
