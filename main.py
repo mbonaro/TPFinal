@@ -1,11 +1,3 @@
-"""md
-diagrama de clases
-caso de uso principal
-test de altas
-archivo de test
-archivo de herramientas usadas
-"""
-
 import kivy
 from kivy.app import App
 from kivy.uix.button import Button
@@ -23,13 +15,66 @@ from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
 from kivy.base import runTouchApp
 import calendar
-
 import time
-from Datos import Usuario,Turno, Datos
 import datetime
-import time
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import *
+from sqlalchemy.orm import sessionmaker
 
 global USER
+
+Base = declarative_base()
+
+class Turno(Base):
+    __tablename__ = 'turnos'
+    fecha = Column(DATE, primary_key=True, nullable=False)
+    hora = Column(TIME, primary_key=True, nullable=False)
+    usuario = Column(String, primary_key=False, nullable=False)
+
+class Usuario(Base):
+    __tablename__ = 'usuarios'
+    nombre = Column(String, primary_key=True, nullable=False)
+    usuario = Column(String, primary_key=True, nullable=False)
+    contrasena =Column(String, primary_key=True, nullable=False)
+
+class Datos(object):
+
+    def __init__(self):
+        engine = create_engine('mysql+mysqlconnector://sql10260351:TE3JvAT2Lr@sql10.freemysqlhosting.net/sql10260351')
+        Base.metadata.bind = engine
+        db_session = sessionmaker()
+        db_session.bind = engine
+        self.session = db_session()
+
+    def alta(self, entrada):
+        self.session.add(entrada)
+        self.session.commit()
+        return entrada
+
+    def baja(self,fecha, hora):
+        self.session.query(Turno).filter(Turno.fecha == fecha and Turno.hora == hora).delete()
+        self.session.commit()
+        return True
+
+    def buscarTurnosFecha(self, fecha):
+        fech = self.session.query(Turno.hora).filter(Turno.fecha == fecha).all()
+        h=[]
+        for i in fech:
+            h.append(datetime.time.strftime(i.hora, '%H'))
+        return h
+
+    def verificarUsuario(self, usuario,password):
+        us = self.session.query(Usuario).filter(Usuario.usuario == usuario).all()
+        if (len(us)==0):
+            return 0
+        elif(us[0].contrasena == password):
+            return us
+        else:
+            return 0
+
+
+
+
 
 class Error(Popup):
     error = BoxLayout(orientation="vertical")
@@ -65,7 +110,7 @@ class Registro(Popup):
         nominput = TextInput()
         us = Label(text="Nombre de usuario")
         usinput = TextInput()
-        psw = Label(text="Contraseña")
+        psw = Label(text="Contrasena")
         pswinput = TextInput(password=True)
         botones = GridLayout(cols=3, row_default_height=40, padding=10)
         aceptar = Button(text="Aceptar")
@@ -86,7 +131,7 @@ class Registro(Popup):
         self.dismiss()
     def alta(self,nom,us,psw):
         try:
-            self.datos.alta(Usuario(nombre=nom, usuario=us, contraseña=psw))
+            self.datos.alta(Usuario(nombre=nom, usuario=us, contrasena=psw))
             self.dismiss()
         except Exception:
             er = Error("El usuario ya esxiste",title="Error al crear usuario", size_hint=(None, None), size=(400, 100))
@@ -110,7 +155,7 @@ class Ingreso(Popup):
     def construir(self):
         nom = Label(text="Nombre de usuario")
         nominput = TextInput()
-        psw = Label(text="Contraseña")
+        psw = Label(text="Contrasena")
         pswinput = TextInput(password=True )
         botones = GridLayout(cols= 3, row_default_height=40, padding=10)
         aceptar = Button(text = "Aceptar")
@@ -138,7 +183,7 @@ class Ingreso(Popup):
             us = str(x[0].usuario)
             self.principal.show_calendar(self)
         else:
-            er = Error("Usuario y/o contraseña incorrecta", title="Error", size_hint=(None, None), size=(400, 100))
+            er = Error("Usuario y/o contrasena incorrecta", title="Error", size_hint=(None, None), size=(400, 100))
             er.open()
 
     def registro(self,ev):
@@ -326,10 +371,10 @@ class Calendar(Popup):
 
 class MyCalendar(App):
     def build(self):
-        """Inicializa en el mes actual y año actual"""
+        """Inicializa en el mes actual y ano actual"""
         mes = time.strftime('%m')
-        año = time.strftime('%Y')
-        self.popup = Calendar(month=int(mes), year=int(año), size=(500, 400))
+        ano = time.strftime('%Y')
+        self.popup = Calendar(month=int(mes), year=int(ano), size=(500, 400))
         #self.popup.bind(on_dismiss=self.on_dismiss)
         self.ingreso = Ingreso(self,title = ("Login"), size=(500, 400))
         return self.ingreso
