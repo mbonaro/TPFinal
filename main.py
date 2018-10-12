@@ -79,7 +79,7 @@ class Registro(Popup):
             self.datos.alta(Usuario(nombre=nom, usuario=us, contrasena=psw))
             self.dismiss()
         except Exception:
-            er = Error("El usuario ya esxiste",title="Error al crear usuario", size_hint=(None, None), size=(400, 100))
+            er = Error("El usuario ya esxiste",title="Error al crear usuario", size_hint=(None, None), size=(600, 200))
             er.open()
 
 
@@ -128,11 +128,11 @@ class Ingreso(Popup):
             us = str(x[0].usuario)
             self.principal.show_calendar(self)
         else:
-            er = Error("Usuario y/o contrasena incorrecta", title="Error", size_hint=(None, None), size=(400, 100))
+            er = Error("Usuario y/o contrasena incorrecta", title="Error", size_hint=(None, None), size=(600, 200))
             er.open()
 
     def registro(self,ev):
-        registroPop = Registro(title=str("Registro de usuario"), size_hint=(None, None), size=(600, 400))
+        registroPop = Registro(title=str("Registro de usuario"), size_hint=(None, None), size=(800, 400))
         registroPop.open()
 
 
@@ -195,7 +195,7 @@ class Turnos(Popup):
         #Verificar horarios disponibles
 
         # Creacion del dropbox
-        dropdown = DropDown(width=475, auto_dismiss=False, dismiss_on_select=False, height=240)
+        dropdown = DropDown(width=775, auto_dismiss=False, dismiss_on_select=False, height=240)
         h=self.datos.buscarTurnosFecha(self.fecha)
         for index in range(10, 19):
             if (str(index) not in h):
@@ -221,7 +221,7 @@ class Turnos(Popup):
         fec = datetime.datetime.strftime(self.fecha,'%Y-%m-%d')
         #titulo = 'Confirmar Turno'# ' + str(dia) + '/' + str(self.month) + '/' + str(self.year)
         titulo = 'Confirmar Turno para el dia ' + fec + ' a las ' + hor
-        self.confirmacion = Confirmacion(self,self.fecha, self.hora, title=str(titulo), size_hint=(None, None), size=(400, 200))
+        self.confirmacion = Confirmacion(self,self.fecha, self.hora, title=str(titulo), size_hint=(None, None), size=(800, 400))
         self.confirmacion.open()
 
         #self.dismiss()
@@ -310,7 +310,7 @@ class Calendar(Popup):
         dia = int(event.text)
         titulo = 'Turno para el ' + str(dia) + '/' + str(self.month) + '/' + str(self.year)
         fec = datetime.datetime.strptime((str(self.year) + '-' + str(self.month) + '-' + str(dia)), '%Y-%m-%d')
-        self.turnosPop = Turnos(fec, title=str(titulo), size_hint=(None, None), size=(500, 400))
+        self.turnosPop = Turnos(fec, title=str(titulo), size_hint=(None, None), size=(800, 400))
         self.turnosPop.open()
 
 
@@ -319,9 +319,9 @@ class MyCalendar(App):
         """Inicializa en el mes actual y ano actual"""
         mes = time.strftime('%m')
         ano = time.strftime('%Y')
-        self.popup = Calendar(month=int(mes), year=int(ano), size=(500, 400))
+        self.popup = Calendar(month=int(mes), year=int(ano), size=(800, 400))
         #self.popup.bind(on_dismiss=self.on_dismiss)
-        self.ingreso = Ingreso(self,title = ("Login"), size=(500, 400))
+        self.ingreso = Ingreso(self,title = ("Login"), size=(800, 400))
         return self.ingreso
 
     def show_calendar(self, event):
