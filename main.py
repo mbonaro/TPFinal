@@ -75,13 +75,16 @@ class Registro(Popup):
     def cerrar(self,ev):
         self.dismiss()
     def alta(self,nom,us,psw):
-        try:
-            self.datos.alta(Usuario(nombre=nom, usuario=us, contrasena=psw))
-            self.dismiss()
-        except Exception:
-            er = Error("El usuario ya esxiste",title="Error al crear usuario", size_hint=(None, None), size=(600, 200))
+        if (nom!='' and us!='' and psw!=''):
+            try:
+                self.datos.alta(Usuario(nombre=nom, usuario=us, contrasena=psw))
+                self.dismiss()
+            except Exception:
+                er = Error("El usuario ya esxiste",title="Error al crear usuario", size_hint=(None, None), size=(600, 200))
+                er.open()
+        else:
+            er = Error("Complete todos los campos", title="Error al crear usuario", size_hint=(None, None), size=(600, 200))
             er.open()
-
 
 
 class Ingreso(Popup):
@@ -122,13 +125,17 @@ class Ingreso(Popup):
         self.principal.stop()
 
     def verificarusuario(self, nom, psw):
-        x = self.datos.verificarUsuario(nom,psw)
-        if not(x == 0):
-            global us
-            us = str(x[0].usuario)
-            self.principal.show_calendar(self)
+        if (nom!='' and psw!=''):
+            x = self.datos.verificarUsuario(nom,psw)
+            if not(x == 0):
+                global us
+                us = str(x[0].usuario)
+                self.principal.show_calendar(self)
+            else:
+                er = Error("Usuario y/o contrasena incorrecta", title="Error", size_hint=(None, None), size=(600, 200))
+                er.open()
         else:
-            er = Error("Usuario y/o contrasena incorrecta", title="Error", size_hint=(None, None), size=(600, 200))
+            er = Error("Complete todos los campos", title="Error al crear usuario", size_hint=(None, None), size=(600, 200))
             er.open()
 
     def registro(self,ev):
