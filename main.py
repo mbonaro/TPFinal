@@ -228,7 +228,7 @@ class Turnos(Popup):
         fec = datetime.datetime.strftime(self.fecha,'%Y-%m-%d')
         #titulo = 'Confirmar Turno'# ' + str(dia) + '/' + str(self.month) + '/' + str(self.year)
         titulo = 'Confirmar Turno para el dia ' + fec + ' a las ' + hor
-        self.confirmacion = Confirmacion(self,self.fecha, self.hora, title=str(titulo), size_hint=(None, None), size=(800, 400))
+        self.confirmacion = Confirmacion(self,self.fecha, self.hora, title=str(titulo), size_hint=(None, None), size=(800, 200))
         self.confirmacion.open()
 
         #self.dismiss()
