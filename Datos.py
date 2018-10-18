@@ -21,7 +21,7 @@ class Usuario(Base):
 class Datos(object):
 
     def __init__(self):
-        engine = create_engine('mysql+mysqlconnector://sql10260351:TE3JvAT2Lr@sql10.freemysqlhosting.net/sql10260351')
+        engine = create_engine('mysql+mysqlconnector://sql10261861:Ti7VgbdEtT@sql10.freemysqlhosting.net/sql10261861')
         #engine = create_engine('mysql+mysqlconnector://root:root@localhost/asd')
         Base.metadata.bind = engine
         db_session = sessionmaker()
